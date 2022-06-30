@@ -6,12 +6,13 @@ import (
 )
 
 func main() {
+	defaultRegistry, _ := matching.NewDefaultRuleRegistry() 
 	registry := matching.NewRuleRegistry()
-	matcher := matching.NewMatcher(*registry)
+	matcher := matching.NewUnorderedMatcher(*registry)
+	lines := []string{"Welcome", "World", "here", "foo"}
 
-	registry.RegisterWith("startsWithW", "startsWith", "W")
-	registry.RegisterWithBefore("endsWithe", "endsWith", "e")
+	registry.RegisterWithRegistry("startsWithW", "startsWith", "W", defaultRegistry)
+	registry.RegisterWithRegistryBefore("endsWithe", "endsWith", "e", defaultRegistry)
 
-	fmt.Println(matcher.MatchString("startsWithW", "Welcome"))
-	fmt.Println(matcher.MatchString("endsWithe", "Welcome"))
+	fmt.Println(matcher.CountMatches(lines))
 }

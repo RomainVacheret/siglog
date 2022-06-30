@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"siglog/src/matching"
+	"github.com/romainvacheret/siglog/src/matching"
 )
 
 func main() {

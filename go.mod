@@ -1,4 +1,4 @@
-module siglog
+module github.com/romainvacheret/siglog
 
 go 1.18
 

@@ -66,7 +66,7 @@ func (um *UnorderedMatcher) Match(lines []string) ([]string, []RuleName, error) 
 			totalLength++
 		}
 	}
-	return matchedLines[:totalLength], matchingRules[:totalLength] ,nil
+	return matchedLines[:totalLength], matchingRules[:totalLength], nil
 }
 
 func (um *UnorderedMatcher) CountMatches(lines []string) (int, error) {
@@ -77,16 +77,49 @@ func (um *UnorderedMatcher) CountMatches(lines []string) (int, error) {
 	}
 }
 
-
-
+func min(a int, b int) int {
+	if a < b {
+		return a 
+	} else {
+		return b 
+	}
+}
 
 type OrderedMatcher struct {
 	registry RuleRegistry
 	rules []RuleName
+	*matcherUtils
 }
 
 func NewOrderedMatcher(registry RuleRegistry, rules []RuleName) *OrderedMatcher {
-	return &OrderedMatcher{registry: registry, rules: rules}
+	return &OrderedMatcher{
+		registry: registry,
+		rules: rules,
+		matcherUtils: NewMatcherUtils(registry)}
+}
+
+func (om *OrderedMatcher) Match(lines []string) ([]string, []RuleName, error) {
+	matchedLines := make([]string, len(lines))
+	matchingRules := make([]RuleName, len(lines))
+	totalLength := 0
+	currentRuleIdx := 0
+
+	for _, line := range lines {
+		if hasMatched := om.MatchString(om.rules[currentRuleIdx], line); hasMatched {
+			matchedLines[totalLength] = line
+			matchingRules[totalLength] = om.rules[currentRuleIdx]
+			totalLength++
+			currentRuleIdx = min(currentRuleIdx + 1, len(om.rules) - 1)
+		}
+	}
+	return matchedLines[:totalLength], matchingRules[:totalLength], nil
 }
 
 
+func (om *OrderedMatcher) CountMatches(lines []string) (int, error) {
+	if l, _, err := om.Match(lines); err == nil {
+		return len(l), err
+	} else {
+		return 0, err
+	}
+}

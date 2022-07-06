@@ -8,8 +8,11 @@ import (
 func main() {
 	defaultRegistry, _ := matching.NewDefaultRuleRegistry() 
 	registry := matching.NewRuleRegistry()
-	matcher := matching.NewUnorderedMatcher(*registry)
-	lines := []string{"Welcome", "World", "here", "foo"}
+	matcher := matching.NewOrderedMatcher(*registry, []matching.RuleName{
+		matching.RuleName("endsWithe"),
+		matching.RuleName("startsWithW"),
+	})
+	lines := []string{"Welcom", "World", "here", "foo"}
 
 	registry.RegisterWithRegistry("startsWithW", "startsWith", "W", defaultRegistry)
 	registry.RegisterWithRegistryBefore("endsWithe", "endsWith", "e", defaultRegistry)

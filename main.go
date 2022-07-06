@@ -12,7 +12,7 @@ func main() {
 		matching.RuleName("endsWithe"),
 		matching.RuleName("startsWithW"),
 	})
-	lines := []string{"Welcom", "World", "here", "foo"}
+	lines := []string{"Welcome", "World", "here", "Wfoo"}
 
 	registry.RegisterWithRegistry("startsWithW", "startsWith", "W", defaultRegistry)
 	registry.RegisterWithRegistryBefore("endsWithe", "endsWith", "e", defaultRegistry)

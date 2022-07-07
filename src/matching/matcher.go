@@ -39,12 +39,14 @@ func (mu *matcherUtils) MatchString(rule RuleName, str string) bool {
 func (mu *matcherUtils) MatchLines(rule RuleName, lines []string) []int {
 	// TODO Size could be reduced
 	matches_idx := make([]int, len(lines))
+	totalMatches := 0
 	for idx, line := range lines {
 		if(mu.MatchString(rule, line)) {
-			matches_idx = append(matches_idx, idx)
+			matches_idx[totalMatches] = idx
+			totalMatches++
 		}
 	}
-	return matches_idx
+	return matches_idx[:totalMatches]
 }
 
 // Return the first rule that matched
@@ -71,6 +73,8 @@ func NewUnorderedMatcher (registry RuleRegistry) *UnorderedMatcher {
 	}
 }
 
+// Add nRules
+// Add option to match any/all rules for a given line
 func (um *UnorderedMatcher) Match(lines []string) ([]string, []RuleName, error) {
 	matchedLines := make([]string, len(lines))
 	matchingRules := make([]RuleName, len(lines))
